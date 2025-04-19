@@ -258,7 +258,7 @@ if selected_outcome == "vs_clin":
                 mode='markers+text',
                 marker=dict(size=12, color='black', symbol='x'),
                 name='Your Patient',
-                text=["You"],
+                text=["Your Patient"],
                 textposition='top center'
             )
 
