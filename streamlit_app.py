@@ -228,19 +228,41 @@ feat_imp = get_feature_importances(cf_model, feature_names, top_n=10, verbose=Fa
 st.subheader("📊 Feature Importances")
 st.bar_chart(feat_imp)
 
-# Optional: Clustering/tradeoff plot
-with st.expander("📍 Show Visual Placement in Clustering / Tradeoffs"):
-    cate_file_dict = {
-        "mrs_binary": "cate_results/cate_results_mrs_binary.csv",
-        "infarct_dch": "cate_results/cate_results_infarct_dch.csv",
-        "vs_clin": "cate_results/cate_results_vs_clin.csv",
-        "infection_dch": "cate_results/cate_results_infection_dch.csv",
-        "gos_binary": "cate_results/cate_results_gos_binary.csv",
-        "shunt_180": "cate_results/cate_results_shunt_180.csv",
-    }
+import plotly.express as px
 
-    if selected_outcome in cate_file_dict:
-        matrix = generate_cate_matrix(X, cate_file_dict)
-        st.markdown("📌 Your patient is overlaid below (not interactive yet).")
-        plot_cate_tradeoff(pd.DataFrame(matrix, columns=sorted(cate_file_dict.keys())),
-                           "mrs_binary", selected_outcome)
+if selected_outcome == "vs_clin":
+    with st.expander("📍 Vasospasm: Stratification by CSF & ICP"):
+        try:
+            df_vas = pd.read_csv("cate_results/cate_results_vs_clin.csv")
+
+            # Scatter base layer
+            fig_vas = px.scatter(
+                df_vas,
+                x="csf_mean",
+                y="icp_high_mean",
+                color="treatment_effect",
+                color_continuous_scale="RdYlGn_r",
+                labels={
+                    "csf_mean": "Mean CSF Drainage (mL/day)",
+                    "icp_high_mean": "Max ICP in 24h (mmHg)",
+                    "treatment_effect": "Effect on Vasospasm"
+                },
+                title="Effect of Prophylactic LD on Vasospasm Risk<br><sup>Stratified by CSF Output and ICP</sup>",
+                height=600
+            )
+
+            # Overlay user point
+            fig_vas.add_scatter(
+                x=[input_df['csf_mean'].iloc[0]],
+                y=[input_df['icp_high_mean'].iloc[0]],
+                mode='markers+text',
+                marker=dict(size=12, color='black', symbol='x'),
+                name='Your Patient',
+                text=["You"],
+                textposition='top center'
+            )
+
+            st.plotly_chart(fig_vas, use_container_width=True)
+
+        except Exception as e:
+            st.error(f"⚠️ Could not render vasospasm stratification plot: {e}")
