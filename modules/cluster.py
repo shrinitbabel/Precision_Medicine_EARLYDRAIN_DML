@@ -48,7 +48,8 @@ def umap_cluster_cates(cate_matrix, n_clusters=4, n_components=3):
     score = silhouette_score(X_umap, labels)
     print(f"📏 Silhouette Score (UMAP): {score:.4f}")
 
-    return X_umap, labels
+    return X_umap, labels, reducer, kmeans
+
 
 def visualize_clusters(X_embed, labels, method="UMAP"):
     plt.figure(figsize=(8, 6))
@@ -126,7 +127,7 @@ def visualize_clusters_3d_plotly(X_embed, labels, kmeans_model=None, method="UMA
         template="plotly_white",
         margin=dict(l=0, r=0, t=40, b=0)
     )
-    fig.show()
+    return fig
 
 
 def plot_cate_tradeoff(cate_matrix, outcome1, outcome2, clusters=None):
@@ -157,5 +158,4 @@ def plot_cate_tradeoff(cate_matrix, outcome1, outcome2, clusters=None):
     plt.grid(True)
     plt.tight_layout()
     plt.show()
-
 
