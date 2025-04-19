@@ -176,9 +176,20 @@ ite = predict_individual_ite(cf_model, input_df, feature_names)
 
 def render_ite_result(ite, outcome_key):
     abs_percent = f"{abs(ite) * 100:.1f}%"
-    is_risk = outcome_key in ["infection_dch", "infarct_dch", "vs_clin", "shunt_180"]
-    color = "green" if (ite < 0 and is_risk) or (ite > 0 and not is_risk) else "red"
-    direction = "reduction" if (ite < 0 and is_risk) or (ite > 0 and not is_risk) else "increase"
+
+    # Determine outcome-specific direction/interpretation
+    if outcome_key in ["vs_clin", "infection_dch", "infarct_dch", "shunt_180"]:
+        # These are risks: lower is better
+        color = "green" if ite < 0 else "red"
+        direction = "reduction" if ite < 0 else "increase"
+    elif outcome_key in ["mrs_binary", "gos_binary"]:
+        # These are benefits: higher is better
+        color = "green" if ite > 0 else "red"
+        direction = "increase" if ite > 0 else "reduction"
+    else:
+        # Fallback
+        color = "gray"
+        direction = "change"
 
     outcome_text = {
         "mrs_binary": "Treatment effect of prophylactic LD on achieving **Modified Rankin Score ≤ 2** at 6 months",
@@ -195,6 +206,7 @@ def render_ite_result(ite, outcome_key):
         f"<span style='font-size:1.4rem; color:{color}; font-weight:700'>{abs_percent} {direction}</span>",
         unsafe_allow_html=True
     )
+
 
 
 render_ite_result(ite, selected_outcome)
