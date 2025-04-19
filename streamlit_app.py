@@ -147,7 +147,7 @@ if not os.path.exists(model_path):
 cf_model = load_model(model_path)
 
 # Live patient input
-input_df = patient_input_form(feature_names)
+input_df = patient_input_form()
 
 # Prediction
 ite = predict_individual_ite(cf_model, input_df, feature_names)
