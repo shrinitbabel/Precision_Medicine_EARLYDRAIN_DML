@@ -207,48 +207,6 @@ def render_ite_result(ite, outcome_key):
         unsafe_allow_html=True
     )
 
-# -------------------------------
-# Cluster Assignment (No Plot)
-# -------------------------------
-
-st.subheader("🧩 Cluster Membership")
-
-try:
-    from joblib import load
-    from sklearn.preprocessing import Normalizer
-
-    # Load saved models
-    reducer = load("clusters/umap_model.joblib")
-    kmeans = load("clusters/kmeans_model.joblib")
-
-    # Patient CATE vector
-    patient_cates = []
-    for key in sorted(OUTCOME_LABELS.keys()):
-        model = load_model(f"models/cf_model_{key}.joblib")
-        effect = model.effect(input_df[feature_names].values)[0]
-        if key in ['infarct_dch', 'shunt_180', 'infection_dch', 'vs_clin']:
-            effect *= -1
-        patient_cates.append(effect)
-
-    patient_cates = np.array(patient_cates).reshape(1, -1)
-    patient_cates_norm = Normalizer().fit_transform(patient_cates)
-    patient_embed = reducer.transform(patient_cates_norm)
-
-    cluster_label = int(kmeans.predict(patient_embed)[0])
-
-    # Optional: Human-friendly labels for clusters
-    cluster_themes = {
-        0: "High Benefit, Low Risk",
-        1: "Low Benefit, High Risk",
-        2: "Neutral Effect",
-        3: "Benefit in Function, Risk in Vasospasm"
-    }
-
-    label = cluster_themes.get(cluster_label, "Unknown Pattern")
-    st.markdown(f"🧬 This patient belongs to **Cluster {cluster_label}** → _{label}_")
-
-except Exception as e:
-    st.error(f"⚠️ Could not determine cluster membership: {e}")
 
 
 render_ite_result(ite, selected_outcome)
