@@ -158,49 +158,4 @@ def plot_cate_tradeoff(cate_matrix, outcome1, outcome2, clusters=None):
     plt.tight_layout()
     plt.show()
 
-import numpy as np
-import plotly.graph_objects as go
-import seaborn as sns
-
-def plot_patient_overlay_3d(X_embed, labels, patient_point, method="UMAP", kmeans_model=None):
-    fig = go.Figure()
-    unique_labels = np.unique(labels)
-    palette = sns.color_palette("Set2", n_colors=len(unique_labels)).as_hex()
-
-    for i, label in enumerate(unique_labels):
-        cluster_points = X_embed[labels == label]
-        color = palette[i]
-
-        fig.add_trace(go.Scatter3d(
-            x=cluster_points[:, 0], y=cluster_points[:, 1], z=cluster_points[:, 2],
-            mode='markers',
-            marker=dict(size=4, color=color),
-            name=f"Cluster {label}",
-            opacity=0.7
-        ))
-
-    # Add your patient overlay
-    fig.add_trace(go.Scatter3d(
-        x=[patient_point[0]], y=[patient_point[1]], z=[patient_point[2]],
-        mode='markers+text',
-        marker=dict(size=10, color='black'),
-        text=["You"],
-        name="New Patient",
-        textposition="top center"
-    ))
-
-    fig.update_layout(
-        title="🧠 3D UMAP Clustering of CATEs with New Patient Overlay",
-        scene=dict(
-            xaxis_title=f"{method} 1",
-            yaxis_title=f"{method} 2",
-            zaxis_title=f"{method} 3"
-        ),
-        template="plotly_white",
-        height=800,
-        width=1000,
-        showlegend=True
-    )
-    return fig
-
 
