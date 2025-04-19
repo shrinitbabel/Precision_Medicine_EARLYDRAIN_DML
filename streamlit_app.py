@@ -11,13 +11,14 @@ from modules.dml import load_model, get_feature_importances
 from modules.cluster import generate_cate_matrix, plot_cate_tradeoff
 
 OUTCOME_LABELS = {
-    "mrs_binary": "Modified Rankin Score (Good outcome)",
-    "gos_binary": "GOS-E ≥ 5 (Functionally Independent)",
     "vs_clin": "Clinical Vasospasm",
     "infection_dch": "Infection at Discharge",
     "infarct_dch": "Cerebral Infarction",
+    "mrs_binary": "Modified Rankin Score (Good outcome)",
+    "gos_binary": "GOS-E ≥ 5 (Functionally Independent)",
     "shunt_180": "Shunt Dependency at 6mo"
 }
+
 
 # --- Live input feature form
 # patient_input_form()
@@ -173,7 +174,26 @@ input_df = patient_input_form()
 # Prediction
 ite = predict_individual_ite(cf_model, input_df, feature_names)
 
-st.subheader("📈 Individual Treatment Effect (ITE)")
+def render_ite_result(ite, outcome_key):
+    abs_percent = f"{abs(ite) * 100:.1f}%"
+    is_risk = outcome_key in ["infection_dch", "infarct_dch", "vs_clin", "shunt_180"]
+    color = "green" if (ite < 0 and is_risk) or (ite > 0 and not is_risk) else "red"
+
+    outcome_text = {
+        "mrs_binary": "Treatment effect of prophylactic LD on achieving **Modified Rankin Score ≤ 2** at 6 months",
+        "gos_binary": "Treatment effect of prophylactic LD on **functional independence (GOS-E ≥ 5)** at 6 months",
+        "vs_clin": "Treatment effect of prophylactic LD on **risk of clinical vasospasm**",
+        "infection_dch": "Treatment effect of prophylactic LD on **risk of infection at discharge**",
+        "infarct_dch": "Treatment effect of prophylactic LD on **risk of cerebral infarction**",
+        "shunt_180": "Treatment effect of prophylactic LD on **risk of shunt dependency at 6 months**"
+    }
+
+    st.subheader("📈 Individual Treatment Effect (ITE)")
+    st.markdown(f"**{outcome_text[outcome_key]}**:")
+    st.markdown(f"<span style='font-size:1.4rem; color:{color}; font-weight:700'>{abs_percent}</span>",
+                unsafe_allow_html=True)
+
+render_ite_result(ite, selected_outcome)
 st.success(f"Estimated effect of prophylactic LD on **{OUTCOME_LABELS[selected_outcome]}**: `{ite:.4f}`")
 
 # Feature Importance
