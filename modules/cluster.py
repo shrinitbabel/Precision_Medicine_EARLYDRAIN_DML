@@ -179,11 +179,11 @@ def plot_patient_overlay_3d(X_embed, labels, patient_point, method="UMAP", kmean
             opacity=0.7
         ))
 
-    # Overlay new patient point as 'X'
+    # Add your patient overlay
     fig.add_trace(go.Scatter3d(
         x=[patient_point[0]], y=[patient_point[1]], z=[patient_point[2]],
         mode='markers+text',
-        marker=dict(size=8, color='black', symbol='x'),
+        marker=dict(size=10, color='black'),
         text=["You"],
         name="New Patient",
         textposition="top center"
@@ -202,4 +202,5 @@ def plot_patient_overlay_3d(X_embed, labels, patient_point, method="UMAP", kmean
         showlegend=True
     )
     return fig
+
 
