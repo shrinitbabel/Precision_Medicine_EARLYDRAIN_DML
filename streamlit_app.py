@@ -207,6 +207,50 @@ def render_ite_result(ite, outcome_key):
         unsafe_allow_html=True
     )
 
+from joblib import load
+from sklearn.preprocessing import Normalizer
+from modules.cluster import plot_patient_overlay_3d
+
+with st.expander("📍 Show Visual Placement in Clustering / Tradeoffs"):
+    cate_file_dict = {
+        "mrs_binary": "cate_results/cate_results_mrs_binary.csv",
+        "infarct_dch": "cate_results/cate_results_infarct_dch.csv",
+        "vs_clin": "cate_results/cate_results_vs_clin.csv",
+        "infection_dch": "cate_results/cate_results_infection_dch.csv",
+        "gos_binary": "cate_results/cate_results_gos_binary.csv",
+        "shunt_180": "cate_results/cate_results_shunt_180.csv",
+    }
+
+    matrix = generate_cate_matrix(X, cate_file_dict)
+    cate_df = pd.DataFrame(matrix, columns=sorted(cate_file_dict.keys()))
+
+    try:
+        X_umap = load("clusters/umap_embedding.joblib")
+        clusters = load("clusters/umap_clusters.joblib")
+        reducer = load("clusters/umap_model.joblib")
+        kmeans = load("clusters/kmeans_model.joblib")
+
+        # Create patient vector (CATEs for all outcomes)
+        patient_cates = []
+        for key in sorted(cate_file_dict.keys()):
+            model = load_model(f"models/cf_model_{key}.joblib")
+            effect = model.effect(input_df[feature_names].values)[0]
+            if key in ['infarct_dch', 'shunt_180', 'infection_dch', 'vs_clin']:
+                effect *= -1
+            patient_cates.append(effect)
+
+        # Normalize and reduce patient point
+        patient_cates = np.array(patient_cates).reshape(1, -1)
+        patient_cates_norm = Normalizer().fit_transform(patient_cates)
+        patient_embed = reducer.transform(patient_cates_norm)
+
+        # Plot with overlay
+        plot_patient_overlay_3d(X_umap, clusters, patient_embed[0], method="UMAP", kmeans_model=kmeans)
+
+    except Exception as e:
+        st.error(f"⚠️ Could not load cluster model or overlay patient: {e}")
+
+    plot_cate_tradeoff(cate_df, "mrs_binary", selected_outcome)
 
 
 render_ite_result(ite, selected_outcome)
