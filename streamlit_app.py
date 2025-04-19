@@ -20,66 +20,83 @@ OUTCOME_LABELS = {
 }
 
 # --- Live input feature form
+# patient_input_form()
+
 def patient_input_form():
-    st.sidebar.subheader("👤 Patient Characteristics")
-    with st.sidebar.container():
-        col1, col2 = st.columns(2)
-        age = col1.number_input("Age", min_value=0, max_value=120, value=60)
-        sex = col2.selectbox("Sex", options=["Male", "Female"])
+    def display_labeled_value(label, value, unit=""):
+        st.markdown(f"<span style='font-size: 0.85rem; font-weight: 500'>{label}:</span> "
+                    f"<span style='font-size: 0.85rem'>{value:.2f} {unit}</span>", unsafe_allow_html=True)
 
-        col3, col4 = st.columns(2)
-        height = col3.number_input("Height (cm)", value=170.0)
-        weight = col4.number_input("Weight (kg)", value=70.0)
-        bmi = weight / ((height / 100) ** 2)
-        col3.markdown(f"<span style='font-size:14px;'>Calculated BMI</span>", unsafe_allow_html=True)
-        col4.markdown(f"<span style='font-size:14px;'>{bmi:.2f}</span>", unsafe_allow_html=True)
+    with st.sidebar:
+        with st.container():
+            st.markdown("### 👤 Patient Characteristics")
+            col1, col2 = st.columns(2)
+            age = col1.number_input("Age", min_value=0, max_value=120, value=60)
+            sex = col2.selectbox("Sex", options=["Male", "Female"])
 
-    st.sidebar.divider()
+            col3, col4 = st.columns(2)
+            height = col3.number_input("Height (cm)", value=170.0)
+            weight = col4.number_input("Weight (kg)", value=70.0)
+            bmi = weight / ((height / 100) ** 2)
+            display_labeled_value("Calculated BMI", bmi)
 
-    st.sidebar.subheader("🩺 Vital Signs & Labs")
-    with st.sidebar.container():
-        col5, col6 = st.columns(2)
-        sbp = col5.number_input("Systolic BP (mmHg)", value=120)
-        dbp = col6.number_input("Diastolic BP (mmHg)", value=80)
-        map_val = (2 * dbp + sbp) / 3
-        col5.markdown(f"<span style='font-size:14px;'>MAP</span>", unsafe_allow_html=True)
-        col6.markdown(f"<span style='font-size:14px;'>{map_val:.1f} mmHg</span>", unsafe_allow_html=True)
+        st.divider()
 
-        hb = st.number_input("Hemoglobin (g/dL)", value=13.0)
-        balance = st.number_input("Fluid Balance (mL)", value=500)
-        icp_7am = st.number_input("ICP at 7am (mmHg)", value=15)
-        icp_high = st.number_input("Max ICP in 24h (mmHg)", value=20)
-        csf = st.number_input("CSF Drainage (mL/24h)", value=150.0)
+        with st.container():
+            st.markdown("### 🩺 Vitals & Labs")
+            col5, col6 = st.columns(2)
+            sbp = col5.number_input("Systolic BP (mmHg)", value=120)
+            dbp = col6.number_input("Diastolic BP (mmHg)", value=80)
+            map_val = (2 * dbp + sbp) / 3
+            display_labeled_value("Mean Arterial Pressure", map_val, "mmHg")
 
-    st.sidebar.divider()
+            hb = st.number_input("Hemoglobin (g/dL)", value=13.0)
+            balance = st.number_input("Fluid Balance (mL)", value=500)
+            icp_7am = st.number_input("ICP at 7am (mmHg)", value=15)
+            icp_high = st.number_input("Max ICP in 24h (mmHg)", value=20)
+            csf = st.number_input("CSF Drainage (mL/24h)", value=150.0)
 
-    st.sidebar.subheader("🧠 Neurologic Status")
-    paresis = st.sidebar.selectbox("Paresis on Admission?", ["No", "Yes"])
-    aphasia = st.sidebar.selectbox("Aphasia on Admission?", ["No", "Yes"])
-    sedation = st.sidebar.selectbox("Sedation on Admission?", ["No", "Yes"])
-    wfns = st.sidebar.slider("WFNS Grade", 1, 5, 1, help="1: GCS 15\n2: GCS 13-14\n3: GCS 13-14 with motor deficit\n4: GCS 7-12\n5: GCS 3-6")
+        st.divider()
 
-    st.sidebar.divider()
+        with st.container():
+            st.markdown("### 🧠 Neurologic Status")
+            paresis = st.selectbox("Paresis on Admission?", ["No", "Yes"])
+            aphasia = st.selectbox("Aphasia on Admission?", ["No", "Yes"])
+            sedation = st.selectbox("Sedation on Admission?", ["No", "Yes"])
 
-    st.sidebar.subheader("🩻 CT Imaging")
-    fisher = st.sidebar.slider("Modified Fisher Scale", 1, 4, 2, help="1: Thin SAH, no IVH\n2: Thin SAH + IVH\n3: Thick SAH (>1 mm), no IVH\n4: Thick SAH + IVH")
-    ct_ich = st.sidebar.selectbox("ICH Present?", ["No", "Yes"])
-    ct_ivh = st.sidebar.selectbox("IVH Present?", ["No", "Yes"])
-    hh = st.sidebar.slider("Hunt and Hess Grade", 1, 5, 2, help="1: Asymptomatic\n5: Deep coma, decerebrate")
+            wfns = st.slider(
+                "WFNS Grade", 1, 5, 1,
+                help="1: GCS 15\n2: GCS 13-14\n3: GCS 13-14 with motor deficit\n4: GCS 7-12\n5: GCS 3-6"
+            )
 
-    st.sidebar.divider()
+        st.divider()
 
-    st.sidebar.subheader("🧬 Aneurysm")
-    circulation = st.sidebar.selectbox("Aneurysm Circulation", ["Anterior", "Posterior"])
-    aneurysm_size = st.sidebar.number_input("Aneurysm Size (mm)", value=5.0)
-    aneurysm_no = st.sidebar.slider("Number of Aneurysms", 1, 4, 1)
+        with st.container():
+            st.markdown("### 🩻 CT Imaging")
+            fisher = st.slider(
+                "Modified Fisher Scale", 1, 4, 2,
+                help="1: Thin SAH, no IVH\n2: Thin SAH + IVH\n3: Thick SAH (>1 mm), no IVH\n4: Thick SAH + IVH"
+            )
+            ct_ich = st.selectbox("ICH Present?", ["No", "Yes"])
+            ct_ivh = st.selectbox("IVH Present?", ["No", "Yes"])
+            hh = st.slider("Hunt and Hess Grade", 1, 5, 2,
+                           help="1: Asymptomatic\n5: Deep coma, decerebrate")
 
-    st.sidebar.divider()
+        st.divider()
 
-    st.sidebar.subheader("💊 Medications")
-    nimodipine = st.sidebar.selectbox("Nimodipine Given?", ["Yes", "No"])
-    statin = st.sidebar.selectbox("Statin Given?", ["Yes", "No"])
-    mg = st.sidebar.selectbox("Magnesium Given?", ["Yes", "No"])
+        with st.container():
+            st.markdown("### 🧬 Aneurysm")
+            circulation = st.selectbox("Aneurysm Circulation", ["Anterior", "Posterior"])
+            aneurysm_size = st.number_input("Aneurysm Size (mm)", value=5.0)
+            aneurysm_no = st.slider("Number of Aneurysms", 1, 4, 1)
+
+        st.divider()
+
+        with st.container():
+            st.markdown("### 💊 Medications")
+            nimodipine = st.selectbox("Nimodipine Given?", ["Yes", "No"])
+            statin = st.selectbox("Statin Given?", ["Yes", "No"])
+            mg = st.selectbox("Magnesium Given?", ["Yes", "No"])
 
     # Convert inputs to feature dict
     patient_data = {
