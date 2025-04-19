@@ -208,13 +208,16 @@ def render_ite_result(ite, outcome_key):
     )
 
 import plotly.io as pio
+import plotly.graph_objects as go
 
 with st.expander("📍 Explore Population-Level UMAP Clustering"):
     try:
-        fig = pio.read_json("clusters/umap_plot.json")
+        fig_dict = pio.read_json("clusters/umap_plot.json")
+        fig = go.Figure(fig_dict)
         st.plotly_chart(fig, use_container_width=True)
     except Exception as e:
         st.error(f"❌ Could not load UMAP clustering plot: {e}")
+
 
 
 render_ite_result(ite, selected_outcome)
