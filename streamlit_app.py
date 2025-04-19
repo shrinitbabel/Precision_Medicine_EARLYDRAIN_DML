@@ -178,6 +178,7 @@ def render_ite_result(ite, outcome_key):
     abs_percent = f"{abs(ite) * 100:.1f}%"
     is_risk = outcome_key in ["infection_dch", "infarct_dch", "vs_clin", "shunt_180"]
     color = "green" if (ite < 0 and is_risk) or (ite > 0 and not is_risk) else "red"
+    direction = "reduction" if (ite < 0 and is_risk) or (ite > 0 and not is_risk) else "increase"
 
     outcome_text = {
         "mrs_binary": "Treatment effect of prophylactic LD on achieving **Modified Rankin Score ≤ 2** at 6 months",
@@ -190,8 +191,11 @@ def render_ite_result(ite, outcome_key):
 
     st.subheader("📈 Individual Treatment Effect (ITE)")
     st.markdown(f"**{outcome_text[outcome_key]}**:")
-    st.markdown(f"<span style='font-size:1.4rem; color:{color}; font-weight:700'>{abs_percent}</span>",
-                unsafe_allow_html=True)
+    st.markdown(
+        f"<span style='font-size:1.4rem; color:{color}; font-weight:700'>{abs_percent} {direction}</span>",
+        unsafe_allow_html=True
+    )
+
 
 render_ite_result(ite, selected_outcome)
 st.success(f"Estimated effect of prophylactic LD on **{OUTCOME_LABELS[selected_outcome]}**: `{ite:.4f}`")
