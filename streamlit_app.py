@@ -245,7 +245,9 @@ with st.expander("📍 Show Visual Placement in Clustering / Tradeoffs"):
         patient_embed = reducer.transform(patient_cates_norm)
 
         # Plot with overlay
-        plot_patient_overlay_3d(X_umap, clusters, patient_embed[0], method="UMAP", kmeans_model=kmeans)
+        fig = plot_patient_overlay_3d(X_umap, clusters, patient_embed[0], method="UMAP", kmeans_model=kmeans)
+        st.plotly_chart(fig, use_container_width=True)
+
 
     except Exception as e:
         st.error(f"⚠️ Could not load cluster model or overlay patient: {e}")

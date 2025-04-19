@@ -201,4 +201,5 @@ def plot_patient_overlay_3d(X_embed, labels, patient_point, method="UMAP", kmean
         width=1000,
         showlegend=True
     )
-    fig.show()
+    return fig
+
