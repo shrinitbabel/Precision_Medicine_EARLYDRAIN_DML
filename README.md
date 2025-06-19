@@ -2,6 +2,8 @@
 
 This repository contains code and data to study prophylactic lumbar drainage (LD) in aneurysmal subarachnoid hemorrhage.  It uses causal machine learning to estimate treatment effects, perform clustering of heterogeneous responses and provides an interactive Streamlit application.
 
+The work associated with this repository is currently under review at a journal.
+
 ## Repository Structure
 
 - `ed.csv` – main dataset with baseline variables and outcomes
