@@ -25,7 +25,7 @@ def prepare_variables_exclude(df, outcome_col, exclude_cols=None):
     feature_names = [feat for feat in base_features if feat not in exclude_cols]
 
     Y = df[outcome_col].values
-    T = df['random'].values
+    T = df['as_treated_flag'].values
     X = IterativeImputer(random_state=42, max_iter=10).fit_transform(df[feature_names].values)
 
     return X, Y, T, feature_names
@@ -81,7 +81,7 @@ def compute_synergy(df, X, Y, T1_name, T2_name, outcome, feature_names):
 
 
 def plot_synergy(synergy, title="Synergy Distribution", bins=40):
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(8, 5), dpi=300)
     sns.histplot(synergy, kde=True, color="darkorange", bins=bins)
     plt.axhline(0, linestyle="--", color="black")
     plt.title(title)
