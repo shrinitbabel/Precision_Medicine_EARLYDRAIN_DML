@@ -64,7 +64,7 @@ def prepare_variables(df, outcome_col):
 
 
     Y = df[outcome_col].values
-    T = df['as_treated_flag'].values
+    T = df['random'].values
     X = IterativeImputer(random_state=42, max_iter=10).fit_transform(df[feature_names].values)
 
     return X, Y, T, feature_names
