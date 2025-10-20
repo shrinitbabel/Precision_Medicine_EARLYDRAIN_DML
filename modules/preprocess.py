@@ -34,8 +34,6 @@ def load_and_clean_data(main_path, ed_daily_path=None):
     df['infection_dch'] = df['infection_dch'].map({'yes': 1, 'no': 0})
     df['vs_clin'] = df['vs_clin'].map({'yes': 1, 'no': 0})
     df['gos_binary'] = df['gos8_180'].apply(lambda x: 1 if x >= 5 else 0)
-    df['mrs_full'] = df['mrs_180']
-    df['gos_full'] = df['gos8_180']
 
     # ⛏️ Merge ed_daily features
     if ed_daily_path:

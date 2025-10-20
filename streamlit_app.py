@@ -267,4 +267,3 @@ if selected_outcome == "vs_clin":
         except Exception as e:
             st.error(f"⚠️ Could not render vasospasm stratification plot: {e}")
 
-

@@ -46,7 +46,7 @@ def evaluate_ate(cf, X_test):
 
 
 def plot_cates(cates, bins=50):
-    plt.figure(figsize=(10, 6), dpi=300)
+    plt.figure(figsize=(10, 6))
     sns.histplot(cates, bins=bins, kde=True, color='royalblue', stat='count')
     plt.title("Distribution of Estimated CATEs (LD effect)")
     plt.xlabel("Estimated Treatment Effect")

@@ -9,7 +9,7 @@ def extract_daily_features(ed_daily):
 
     agg_cols = [
         "rr_syst", "rr_dia", "rr_map", "hb", "balance",
-        "icp_7am", "icp_high", "csf"
+        "icp_7am", "icp_high", "csf", "evd", "ld"
     ]
 
     # Group by patient ID and take per-patient mean across ICU days
