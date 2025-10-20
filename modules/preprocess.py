@@ -60,7 +60,7 @@ def prepare_variables(df, outcome_col):
     'wfns', 'sedation_adm', 'paresis_adm', 'aphasia_adm',
     'nimodipine', 'statin', 'mg', 'ct_modfisher', 'bmi',
     'rr_map_mean', 'rr_syst_mean', 'rr_dia_mean', 'hb_mean',
-    'balance_mean', 'icp_7am_mean', 'icp_high_mean', 'evd_mean', 'ld_mean']
+    'balance_mean', 'icp_7am_mean', 'icp_high_mean', 'csf_mean']
 
 
     Y = df[outcome_col].values
