@@ -18,6 +18,7 @@ The work associated with this repository is currently under review at a journal.
 - `cate_results/` – exported conditional treatment effects
 - `streamlit_app.py` – web app to estimate individual effects
 - Jupyter notebooks (`*.ipynb`) demonstrate analyses for outcomes like modified Rankin Score, vasospasm and others.
+- `ATE_stability_analysis.ipynb` helps validate whether the heterogeneous treatment effect estimates (like CATEs or ATEs) are stable across different training strategies. 
 
 ## Quick Start
 

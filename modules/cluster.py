@@ -158,3 +158,4 @@ def plot_cate_tradeoff(cate_matrix, outcome1, outcome2, clusters=None):
     plt.grid(True)
     plt.tight_layout()
     plt.show()
+
