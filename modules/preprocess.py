@@ -17,7 +17,7 @@ def load_and_clean_data(main_path, ed_daily_path=None):
                   'LD': 1, 'NoLD': 0}
 
     binary_cols = ['random', 'ct_ivh', 'ct_ich', 'sex', 'aneurysm_trt',
-                   'aneurysm_circulation', 'sedation_adm',
+                   'aneurysm_circulation', 'shunt_180', 'sedation_adm',
                    'paresis_adm', 'aphasia_adm', 'nimodipine', 'statin', 'mg', 'infarct_trt']
     df['mrs_adm'] = 1 - df['mrs_adm']
 
@@ -29,7 +29,7 @@ def load_and_clean_data(main_path, ed_daily_path=None):
 
     # Outcomes
     df['mrs_binary'] = df['mrs_180'].apply(lambda x: 1 if x <= 2 else 0)
-    df['shunt_180'] = df['shunt_180'].map({'yes': 1, 'no': 0})
+    df['shunt_180'] = df['infarct_dch'].map({'yes': 1, 'no': 0})
     df['infarct_dch'] = df['infarct_dch'].map({'yes': 1, 'no': 0})
     df['infection_dch'] = df['infection_dch'].map({'yes': 1, 'no': 0})
     df['vs_clin'] = df['vs_clin'].map({'yes': 1, 'no': 0})
