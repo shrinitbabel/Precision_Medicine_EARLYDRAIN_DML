@@ -46,7 +46,7 @@ def analyze_binary_subgroup_cates(cate_df, df, cates, binary_features, reverse_m
         print(f"🧪 P-value: {p_val:.4f}")
 
         # Violin Plot
-        plt.figure(figsize=(6, 4))
+        plt.figure(figsize=(6, 4), dpi=300)
         sns.violinplot(x=label_col, y='treatment_effect', data=cate_df, palette='Set2', inner='box')
         plt.axhline(0, color='black', linestyle='--')
         plt.title(f"CATE by {col}")
@@ -70,7 +70,7 @@ def plot_cate_vs_feature(cate_df, feature, effect_col='treatment_effect', title_
     if feature not in cate_df.columns:
         raise ValueError(f"'{feature}' not found in DataFrame columns.")
 
-    plt.figure(figsize=(7, 5))
+    plt.figure(figsize=(7, 5), dpi=300)
     sns.scatterplot(x=feature, y=effect_col, data=cate_df, alpha=0.5, color='darkblue', s=30)
     plt.title(f"{title_prefix} {feature}")
     plt.xlabel(feature)
@@ -94,7 +94,7 @@ def analyze_ordinal_features(df, features, effect_col='treatment_effect'):
             print(f"⚠️ Column '{col}' not in DataFrame; skipping.")
             continue
 
-        plt.figure(figsize=(7, 4))
+        plt.figure(figsize=(7, 4), dpi=300)
         sns.pointplot(x=col, y=effect_col, data=df, errorbar='se', color='royalblue')
         plt.axhline(0, color='black', linestyle='--')
         plt.title(f"CATE vs {col}")

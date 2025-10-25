@@ -52,7 +52,7 @@ def umap_cluster_cates(cate_matrix, n_clusters=4, n_components=3):
 
 
 def visualize_clusters(X_embed, labels, method="UMAP"):
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(8, 6), dpi=300)
     sns.scatterplot(x=X_embed[:, 0], y=X_embed[:, 1], hue=labels, palette='Set2', s=60)
     plt.title(f"Individual Treatment Effects across Outcomes")
     plt.xlabel(f"{method} 1")
@@ -138,7 +138,7 @@ def plot_cate_tradeoff(cate_matrix, outcome1, outcome2, clusters=None):
     if outcome1 not in cate_matrix.columns or outcome2 not in cate_matrix.columns:
         raise ValueError("❌ Selected outcomes not in CATE matrix.")
 
-    plt.figure(figsize=(7, 6))
+    plt.figure(figsize=(7, 6), dpi=300)
     if clusters is not None:
         sns.scatterplot(
             x=cate_matrix[outcome1], y=cate_matrix[outcome2],
